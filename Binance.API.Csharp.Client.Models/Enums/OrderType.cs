@@ -6,6 +6,7 @@
     public enum OrderType
     {
         LIMIT,
+        LIMIT_MAKER,
         MARKET
     }
 }

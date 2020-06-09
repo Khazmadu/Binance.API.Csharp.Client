@@ -50,7 +50,7 @@ namespace Binance.API.Csharp.Client
             {
                 throw new ArgumentException("Quantity must be greater than zero.", "quantity");
             }
-            if (orderType == OrderType.LIMIT)
+            if (orderType == OrderType.LIMIT || orderType == OrderType.LIMIT_MAKER)
             {
                 if (unitPrice <= 0m)
                 {
@@ -78,7 +78,7 @@ namespace Binance.API.Csharp.Client
                     throw new Exception($"Iceberg orders not allowed for this symbol.");
                 }
 
-                if (orderType == OrderType.LIMIT)
+                if (orderType == OrderType.LIMIT || orderType == OrderType.LIMIT_MAKER)
                 {
                     if (unitPrice < priceFilter.MinPrice)
                     {
@@ -250,7 +250,7 @@ namespace Binance.API.Csharp.Client
 
             var args = $"symbol={symbol.ToUpper()}&side={side}&type={orderType}&quantity={quantity}"
                 + (orderType == OrderType.LIMIT ? $"&timeInForce={timeInForce}" : "")
-                + (orderType == OrderType.LIMIT ? $"&price={price}" : "")
+                + (orderType == OrderType.LIMIT || orderType == OrderType.LIMIT_MAKER ? $"&price={price}" : "")
                 + (icebergQty > 0m ? $"&icebergQty={icebergQty}" : "")
                 + $"&recvWindow={recvWindow}";
             var result = await _apiClient.CallAsync<NewOrder>(ApiMethod.POST, EndPoints.NewOrder, true, args);
@@ -276,7 +276,7 @@ namespace Binance.API.Csharp.Client
 
             var args = $"symbol={symbol.ToUpper()}&side={side}&type={orderType}&quantity={quantity}"
                 + (orderType == OrderType.LIMIT ? $"&timeInForce={timeInForce}" : "")
-                + (orderType == OrderType.LIMIT ? $"&price={price}" : "")
+                + (orderType == OrderType.LIMIT || orderType == OrderType.LIMIT_MAKER ? $"&price={price}" : "")
                 + (icebergQty > 0m ? $"&icebergQty={icebergQty}" : "")
                 + $"&recvWindow={recvWindow}";
             var result = await _apiClient.CallAsync<dynamic>(ApiMethod.POST, EndPoints.NewOrderTest, true, args);
